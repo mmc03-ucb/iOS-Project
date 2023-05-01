@@ -12,14 +12,19 @@ class Reward: ObservableObject, Identifiable {
 
 struct RewardsView: View {
     @ObservedObject var studyStreak = Reward(rewardName: "Study Star")
-    @ObservedObject var focusSession = Reward(rewardName: "Focus Session")
-    @ObservedObject var pomodoroWarrior = Reward(rewardName: "Pomodoro Warrior")
+    @ObservedObject var focusSession = Reward(rewardName: "Excellent Eater")
+    @ObservedObject var pomodoroWarrior = Reward(rewardName: "Water Warrior")
+    @State private var rewards: [Reward] = [] // Example goals data
 
     @State var rewardTotal = 0
 
     func addNumber(reward: Reward) {
         reward.rewardNumber += 1
         rewardTotal += 1
+    }
+
+    func addReward(reward: Reward) {
+        rewards.append(reward)
     }
 
     var body: some View {
@@ -32,45 +37,25 @@ struct RewardsView: View {
 
             Spacer()
 
-            Text("Reward Number \(studyStreak.rewardNumber)")
-                .scaledToFit()
-                .padding()
-                .font(.system(size: 36))
+            ForEach(rewards) {
+                reward in VStack {
+                    Text(reward.rewardName)
+                        .scaledToFit()
+                        .font(.system(size: 36))
+                        .fontWeight(.semibold)
+                        .foregroundColor(.blue)
+                        .background(Color.gray.opacity(0.2))
+                        
+                    Text(reward.rewardNumber)
+                        .scaledToFit()
+                        .padding()
+                        .font(.system(size: 24))
 
-            Text(studyStreak.rewardName)
-                .scaledToFit()
-                .padding()
-                .font(.system(size: 24))
-
-            Spacer()
-
-            Text("Reward Number \(focusSession.rewardNumber)")
-                .scaledToFit()
-                .padding()
-                .font(.system(size: 36))
-
-            Text(focusSession.rewardName)
-                .scaledToFit()
-                .padding()
-                .font(.system(size: 24))
-
-            Spacer()
-
-            Text("Reward Number \(pomodoroWarrior.rewardNumber)")
-                .scaledToFit()
-                .padding()
-                .font(.system(size: 36))
-
-            Text(pomodoroWarrior.rewardName)
-                .scaledToFit()
-                .padding()
-                .font(.system(size: 24))
+                        //Can add a reward image here if wanted
+                }
+            }
 
         }
-        .onAppear {
-            addNumber(reward: studyStreak)
-            addNumber(reward: focusSession)
-            addNumber(reward: pomodoroWarrior)
         }
     }
 }

@@ -78,9 +78,40 @@ struct Goal: Identifiable {
     var description: String
     var dueDate: Date
     var status: GoalStatus
+    //make new instance of rewards to update and connect the two 
+    @EnvironmentObject var rewards = Reward()
+    var allRewards = RewardsView()
     
     enum GoalStatus: String {
         case completed = "Completed"
         case pending = "Pending"
+    }
+
+    func addReward() {
+        //Make reward name equal to the title 
+        rewardName = title;
+        allRewards.rewardTotal += 1
+    }
+
+    //See when to show alert, only when goal is completed
+    func showAlert() -> Alert{
+        if completed == .completed {
+            var alertMessage = UIAlertController(title: Text("Congrats! You achieved your goal."), message: "Ready to view your rewards?", preferredStyle: .alert)
+
+            //Create View Reward Button 
+            let view = UIAlertAction(title: "View Rewards", style: .default, handler:{ (action) -> 
+            NavigationLink(destination: RewardsView())})
+            
+            //Create Return button 
+            let returnButton = UIAlertAction(title: "Return to Goals", style: .cancel, handler: { (action) -> 
+            NavigationLink(destination: GoalsListView())})
+
+            //Add the buttons to the alert message
+            alertMessage.add(view)
+            alertMessage.add(returnButton)
+
+            self.present(alertMessage, animate: true, completion: nil)
+
+        }
     }
 }
